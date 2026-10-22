@@ -1,32 +1,36 @@
-# 🗄 Дерекқор құрылымы (Database Structure)
+# 🗄 Дерекқордың ER-диаграммасы (ER Diagram)
 
-Жоба MySQL дерекқорындағы 3 негізгі кестеден тұрады:
+Жоба MySQL дерекқорындағы 3 негізгі кестеден және олардың арасындағы байланыстардан тұрады.
 
-### 1. `users` (Пайдаланушылар кестесі)
-* `id` (INT, AUTO_INCREMENT, PRIMARY KEY) — Пайдаланушының бірегей идентификаторы.
-* `username` (VARCHAR(50), UNIQUE) — Пайдаланушы аты.
-* `email` (VARCHAR(100), UNIQUE) — Электрондық пошта.
-* `password` (VARCHAR(255)) — Хэштелген құпиясөз (`password_hash()`).
-* `role` (ENUM('user', 'admin')) — Пайдаланушы рөлі.
-* `created_at` (TIMESTAMP) — Тіркелген уақыты.
+```mermaid
+erDiagram
+    USERS {
+        int id PK "PRIMARY KEY, AUTO_INCREMENT"
+        string username "UNIQUE"
+        string email "UNIQUE"
+        string password "password_hash()"
+        string role "ENUM('user', 'admin')"
+        timestamp created_at
+    }
 
----
+    CATEGORIES {
+        int id PK "PRIMARY KEY, AUTO_INCREMENT"
+        string name "Санат атауы"
+        string slug "URL атауы"
+    }
 
-### 2. `categories` (Санаттар кестесі)
-* `id` (INT, AUTO_INCREMENT, PRIMARY KEY) — Санаттың бірегей идентификаторы.
-* `name` (VARCHAR(50)) — Санат атауы (мысалы: Таңғы ас, Сорпалар, Дезерттер).
-* `slug` (VARCHAR(50)) — URL үшін ыңғайлы атау.
+    RECIPES {
+        int id PK "PRIMARY KEY, AUTO_INCREMENT"
+        int user_id FK "FOREIGN KEY -> USERS.id"
+        int category_id FK "FOREIGN KEY -> CATEGORIES.id"
+        string title "Рецепт атауы"
+        text description "Қысқаша сипаттама"
+        text ingredients "Ингредиенттер"
+        text instructions "Дайындалу жолы"
+        int cooking_time "Уақыты (мин)"
+        string image "Сурет сілтемесі"
+        timestamp created_at
+    }
 
----
-
-### 3. `recipes` (Рецепттер кестесі)
-* `id` (INT, AUTO_INCREMENT, PRIMARY KEY) — Рецепттің бірегей идентификаторы.
-* `user_id` (INT, FOREIGN KEY -> `users.id`) — Рецепт авторы.
-* `category_id` (INT, FOREIGN KEY -> `categories.id`) — Тағам санаты.
-* `title` (VARCHAR(150)) — Рецепттің атауы.
-* `description` (TEXT) — Қысқаша сипаттамасы.
-* `ingredients` (TEXT) — Ингредиенттер тізімі.
-* `instructions` (TEXT) — Дайындалу жолы.
-* `cooking_time` (INT) — Дайындалу уақыты (минутпен).
-* `image` (VARCHAR(255)) — Суреттің файлына өту сілтемесі.
-* `created_at` (TIMESTAMP) — Жарияланған уақыты.
+    USERS ||--o{ RECIPES : "жариялайды (1:N)"
+    CATEGORIES ||--o{ RECIPES : "қамтиды (1:N)"
