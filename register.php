@@ -38,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hash = password_hash($password, PASSWORD_DEFAULT);
             $ins = $pdo->prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)');
             $ins->execute([$username, $email, $hash]);
-            $_SESSION['flash'] = ['type' => 'success', 'text' => 'Тіркелу сәтті өтті! Енді жүйеге кіріңіз.'];
-            header('Location: login.php');
+            $_SESSION['welcome_name'] = $username;
+            header('Location: welcome.php');
             exit;
         }
     }

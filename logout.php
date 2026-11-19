@@ -9,6 +9,6 @@ if (ini_get('session.use_cookies')) {
 session_destroy();
 
 session_start();
-$_SESSION['flash'] = ['type' => 'success', 'text' => 'Сіз жүйеден шықтыңыз.'];
+$_SESSION['flash'] = ['type' => 'success', 'text' => 'Сау болыңыз! Тағы кездескенше 👋 Рахмет, келіп тұрыңыз!'];
 header('Location: login.php');
 exit;
